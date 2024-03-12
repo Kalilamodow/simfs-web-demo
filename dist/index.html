@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>simfs demo</title>
+
+  <script type="module" crossorigin src="/assets/index-CMBOC7ef.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-D4Zlsb8c.css">
+</head>
+
+<body>
+  <h1><span style="color: blue">simfs</span> - Demo</h1>
+
+  <main>
+    <div id="current-working-directory">/</div>
+
+    <section id="directory-listing">loading...</section>
+
+    <section id="cwd-buttons">
+      <button type="button">New File</button>
+      <button type="button">New Directory</button>
+    </section>
+  </main>
+
+  <section id="file-editor-ctr" hidden>
+    <div style="margin-bottom: 5px;" id="file-editor-title">[file name]</div>
+
+    <textarea id="file-editor-input"></textarea>
+
+    <button type="button" id="file-editor-close" onclick="this.parentElement.hidden = true;">
+      Close
+    </button>
+    <button type="button" id="file-editor-save">Save</button>
+  </section>
+
+  <nav class="bottom-buttons">
+    <button type="button" id="save-fs">Save</button>
+    <button type="button" id="load-fs">Load</button>
+    <button type="button" id="clear-fs">Clear</button>
+  </nav>
+</body>
+
+</html>
