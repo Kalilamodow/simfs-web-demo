@@ -77,6 +77,8 @@ section#file-editor-ctr > button {
 }
 
 .bottom-buttons {
+  border-top: 1px solid black;
+  padding-top: 10px;
   position: fixed;
   bottom: 15px;
   left: 15px;

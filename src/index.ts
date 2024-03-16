@@ -104,6 +104,8 @@ function create(type: "file" | "directory") {
   } else {
     simfs.cwd().createDirectory(name);
   }
+
+  updateDisplay();
 }
 
 function downloadSimfs() {
