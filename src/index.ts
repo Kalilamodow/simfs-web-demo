@@ -1,5 +1,4 @@
 import SimulatedFilesystem, { SFFile } from "./simfs";
-import deserialize from "./simfs/deserializer";
 
 let simfs = new SimulatedFilesystem();
 
