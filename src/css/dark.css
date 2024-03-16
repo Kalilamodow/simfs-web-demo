@@ -1,0 +1,32 @@
+:root {
+  background-color: #181818;
+  color: white;
+}
+
+button {
+  background-color: #333;
+  color: #ccc;
+}
+
+main,
+div#current-working-directory,
+section#cwd-buttons,
+button,
+#file-editor-ctr,
+.bottom-buttons,
+textarea {
+  border-color: #ccc;
+}
+
+section#directory-listing > div {
+  color: #0ac;
+}
+
+section#directory-listing > div[data-type="directory"] {
+  color: #0a0;
+}
+
+textarea {
+  background-color: #444;
+  color: white;
+}
