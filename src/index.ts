@@ -1,4 +1,4 @@
-import SimulatedFilesystem, { SFFile } from "./simfs";
+import SimulatedFilesystem, { SFFile } from "simfs";
 
 let simfs = new SimulatedFilesystem();
 
