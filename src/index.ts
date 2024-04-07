@@ -2,166 +2,207 @@ import SimulatedFilesystem, { SFFile } from "simfs";
 
 let simfs = new SimulatedFilesystem();
 
-function createInitialSimfs() {
+function createSampleSimfs() {
   const root = simfs.root;
-  root.createFile("hello.txt", "Hello, World!");
-  root.createFile(
-    "secret.txt",
-    "The treasure is in Africa, at the coordina-",
-  );
 
-  const subdir = root.createDirectory("subdir");
-  subdir.createFile(
-    "secret2.txt",
-    "Okay, I got cut off last time. It's located in-",
-  );
-  subdir.createFile("bye bye.txt", "Bye bye, world :(");
+  root.createFile("file1.txt", "This is the first file.");
+  root.createFile("file2.txt", "This is the second file.");
+
+  const subdir = root.createDirectory("directory");
+  subdir.createFile("file3.txt", "This is the third file.");
+  subdir.createFile("file4.txt", "This is the fourth file.");
+
+  subdir.createDirectory("emptydir");
 }
 
-function updateDisplay() {
-  const listing = simfs.cwd();
-  document.getElementById("current-working-directory")!.innerText =
-    simfs.cwd_path + (simfs.cwd_path != "/" ? "/" : "");
-
-  const toShow: {
-    type: "directory" | "file";
-    name: string;
-    displayName: string;
-  }[] = [];
-
+function paintDirListing() {
+  document.getElementById("cwd-display").innerText = simfs.cwd_path;
   if (simfs.cwd_path != "/")
-    toShow.push({ type: "directory", name: "..", displayName: "back" });
+    document.getElementById("cwd-display").innerText += "/";
 
-  listing.get().forEach(pth => {
-    toShow.push({
-      type: pth.type,
-      name: pth.name,
-      displayName: pth.type == "directory" ? `${pth.name}/` : pth.name,
+  const listing = simfs.cwd().get();
+  const listingEle = document.getElementById("dir-listing");
+
+  while (listingEle.firstChild) {
+    listingEle.removeChild(listingEle.firstChild);
+  }
+
+  if (simfs.cwd_path != "/") {
+    const button = document.createElement("button");
+    button.classList.add("fl-btn");
+    button.textContent = "up";
+    button.style.color = "purple";
+
+    button.addEventListener("click", () => {
+      simfs.cd([".."]);
+      paintDirListing();
     });
-  });
 
-  const listingEle = document.getElementById("directory-listing")!;
-  listingEle.innerHTML = "";
-  toShow.forEach(x => {
-    const ele = document.createElement("div");
-    ele.setAttribute("data-type", x.type);
-    ele.innerText = x.displayName;
+    listingEle.appendChild(button);
+  }
 
-    if (x.type == "directory") {
-      ele.addEventListener("click", () => {
-        simfs.cd([x.name]);
-        document.getElementById("file-editor-ctr")!.hidden = true;
-        updateDisplay();
+  listing.forEach(resource => {
+    const button = document.createElement("button");
+    button.classList.add("fl-btn");
+
+    const textSpan = document.createElement("span");
+    textSpan.textContent = resource.name;
+
+    button.appendChild(textSpan);
+
+    if (resource.type == "directory") {
+      button.classList.add("fl-d");
+
+      button.addEventListener("click", () => {
+        simfs.cd([resource.name]);
+        paintDirListing();
       });
+
+      document.getElementById("texteditor").hidden = true;
     } else {
-      ele.addEventListener("click", () =>
-        openFileEditor(listing.get(x.name, "file")!),
-      );
+      button.classList.add("fl-f");
+      button.addEventListener("click", () => {
+        const texteditor = document.getElementById("texteditor");
+        texteditor.dataset.editing = simfs.cwd_path + "/" + resource.name;
+
+        texteditor.querySelector("header").innerText = resource.name;
+
+        texteditor.querySelector("textarea").value = (
+          resource as SFFile
+        ).read();
+
+        texteditor.hidden = false;
+      });
     }
 
-    listingEle.appendChild(ele);
-  });
-}
+    const deleteBtn = document.createElement("button");
+    deleteBtn.innerHTML = "delete";
 
-function openFileEditor(file: SFFile) {
-  const container = document.getElementById("file-editor-ctr")!;
-  const textarea = container.querySelector(
-    "#file-editor-input",
-  ) as HTMLTextAreaElement;
-  textarea.value = file.read();
-
-  // remove last button (save button)
-  Array.from(container.children).at(-1)!.remove();
-
-  const saveButton = document.createElement("button");
-  saveButton.type = "button";
-  saveButton.innerText = "Save";
-
-  saveButton.onclick = () => {
-    file.write(textarea.value);
-    textarea.value = "";
-    container.hidden = true;
-  };
-
-  container.appendChild(saveButton);
-
-  (container.children[0] as HTMLElement).innerText = file.name;
-  container.hidden = false;
-}
-
-function create(type: "file" | "directory") {
-  const name = prompt("Name of new " + type);
-  if (!name) return;
-
-  if (simfs.cwd().get(name)) {
-    alert("Already exists");
-    return;
-  }
-
-  if (type == "file") {
-    simfs.cwd().createFile(name);
-  } else {
-    simfs.cwd().createDirectory(name);
-  }
-
-  updateDisplay();
-}
-
-function downloadSimfs() {
-  const serialized = simfs.serialize();
-  const blob = new Blob([serialized], {
-    type: "application/octet-stream",
-  });
-
-  const link = document.createElement("a");
-  link.download = "filesystem.simfs";
-  link.href = URL.createObjectURL(blob);
-  link.style.display = "none";
-  document.body.appendChild(link);
-
-  link.click();
-  link.remove();
-}
-
-function loadSimfs() {
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = "*.simfs";
-
-  input.onchange = () => {
-    const fileList = input.files;
-    if (!fileList) return;
-    const file = fileList[0];
-    if (!file) return;
-
-    file.text().then(text => {
-      simfs = new SimulatedFilesystem(text);
-      updateDisplay();
+    deleteBtn.addEventListener("click", () => {
+      simfs.cwd().delete(resource.name);
+      paintDirListing();
+      document.getElementById("texteditor").hidden = true;
     });
 
-    input.remove();
-  };
-
-  input.click();
+    button.innerHTML += "&emsp;";
+    button.appendChild(deleteBtn);
+    listingEle.appendChild(button);
+  });
 }
 
-// createInitialSimfs();
-updateDisplay();
+createSampleSimfs();
+paintDirListing();
 
-document
-  .querySelector("#cwd-buttons>button:first-child")!
-  .addEventListener("click", () => create("file"));
+window.onload = () => {
+  // text editor save button
+  (() => {
+    const teSaveButton = document.querySelector(
+      "#texteditor>button",
+    ) as HTMLButtonElement;
 
-document
-  .querySelector("#cwd-buttons>button:last-child")!
-  .addEventListener("click", () => create("directory"));
+    teSaveButton.addEventListener("click", () => {
+      const path = document.getElementById("texteditor").dataset.editing;
 
-document
-  .getElementById("save-fs")
-  ?.addEventListener("click", downloadSimfs);
+      (simfs.get_by_path(path) as SFFile).write(
+        document.querySelector("textarea").value,
+      );
+    });
+  })();
 
-document.getElementById("load-fs")?.addEventListener("click", loadSimfs);
+  // new file/dir buttons
+  (() => {
+    const newFileButton = document.querySelector(
+      "#new-file-btn",
+    ) as HTMLButtonElement;
 
-document.getElementById("clear-fs")?.addEventListener("click", () => {
-  if (confirm("Are you sure?")) simfs = new SimulatedFilesystem();
-});
+    const newDirButton = document.querySelector(
+      "#new-dir-btn",
+    ) as HTMLButtonElement;
+
+    newFileButton.addEventListener("click", () => {
+      const fileName = prompt("Enter file name");
+      if (!fileName) return;
+
+      if (
+        simfs
+          .cwd()
+          .get()
+          .some(resource => resource.name == fileName)
+      ) {
+        alert("File already exists");
+        return;
+      }
+
+      simfs.cwd().createFile(fileName, "");
+      paintDirListing();
+    });
+
+    newDirButton.addEventListener("click", () => {
+      const dirName = prompt("Enter directory name");
+      if (!dirName) return;
+
+      if (
+        simfs
+          .cwd()
+          .get()
+          .some(resource => resource.name == dirName)
+      ) {
+        alert("Directory already exists");
+        return;
+      }
+
+      simfs.cwd().createDirectory(dirName);
+      paintDirListing();
+    });
+  })();
+
+  // save/load/clear simfs buttons
+  (() => {
+    document.getElementById("save-btn").addEventListener("click", () => {
+      const serialized = simfs.serialize() as string;
+      const blob = new Blob([serialized], {
+        type: "application/octet-stream",
+      });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "filesystem";
+
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("load-btn").addEventListener("click", () => {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "*";
+      input.style.display = "none";
+      input.click();
+
+      input.addEventListener("change", () => {
+        const file = input.files[0];
+        input.remove();
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = evt => {
+          simfs = new SimulatedFilesystem(evt.target.result as string);
+          paintDirListing();
+        };
+
+        reader.readAsText(file);
+      });
+    });
+
+    document.getElementById("clear-btn").addEventListener("click", () => {
+      if (confirm("Are you sure?")) {
+        simfs = new SimulatedFilesystem();
+        paintDirListing();
+      }
+    });
+  })();
+};
