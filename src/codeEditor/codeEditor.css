@@ -25,11 +25,13 @@
     resize: none;
     color: transparent;
     caret-color: black;
+    overflow: auto;
+    text-wrap: nowrap;
+    word-wrap: normal;
   }
 
   pre {
     background-color: #ddd;
-    color: blue;
     border-radius: 5px;
     overflow: hidden;
 
@@ -52,21 +54,22 @@
       }
 
       &.class-name, &.decorator {
-        color: darkcyan;
+        color: #a0f;
         font-weight: bold;
       }
 
       &.function {
-        color: #80f;
+        color: blue;
+        font-weight: bold;
       }
 
       &.comment {
-        color: brown;
+        color: darkcyan;
       }
 
       &.property,
       &.interpolation {
-        color: darkgoldenrod;
+        color: darkred;
       }
     }
   }
