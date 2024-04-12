@@ -100,8 +100,24 @@ section#texteditor {
     text-align: center;
   }
 
-  button {
+  section button {
     width: 100%;
+    background-color: white;
+    border: 1px solid black;
+    margin: 0;
+    cursor: pointer;
+    height: 2rem;
+
+    &:first-child {
+      border-bottom-color: gray;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
   }
 
   &[hidden] {

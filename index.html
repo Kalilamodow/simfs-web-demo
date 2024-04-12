@@ -2,16 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>simfs Web Demo</title>
 
     <link rel="stylesheet" href="src/style.css" />
     <script src="src/index.ts" type="module" defer></script>
 
     <link rel="stylesheet" href="src/codeEditor/codeEditor.css" />
-    <script src="./src/codeEditor/prism.js"></script>
+    <script src="./prism.js"></script>
   </head>
   <body>
     <nav>
@@ -34,11 +32,12 @@
     <section id="texteditor" data-editing="" data-filetype="text" hidden>
       <header></header>
       <div id="editor"></div>
-      <button type="button">save</button>
-      <br /><br />
-      <button type="button" onclick="this.parentElement.hidden = true">
-        cancel
-      </button>
+      <section>
+        <button type="button">save</button>
+        <button type="button" onclick="this.parentElement.parentElement.hidden = true">
+          close
+        </button>
+      </section>
     </section>
   </body>
 </html>

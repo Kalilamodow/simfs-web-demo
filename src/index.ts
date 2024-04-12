@@ -181,7 +181,7 @@ window.onload = () => {
   // text editor save button
   (() => {
     const teSaveButton = document.querySelector(
-      "#texteditor>button"
+      "#texteditor button:first-child"
     ) as HTMLButtonElement;
 
     teSaveButton.addEventListener("click", () => {

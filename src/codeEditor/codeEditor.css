@@ -51,7 +51,7 @@
         color: orangered;
       }
 
-      &.class-name {
+      &.class-name, &.decorator {
         color: darkcyan;
         font-weight: bold;
       }
