@@ -1,6 +1,75 @@
 import SimulatedFilesystem, { SFFile } from "simfs";
+import { Resource } from "simfs/dist/resources";
 
 let simfs = new SimulatedFilesystem();
+
+function createTrashImage() {
+  const b64 =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAA" +
+    "AAf8/9hAAAAAXNSR0IArs4c6QAAAUNJREFUOE+V0j8sn1EUxvGPv6mBUSeJ" +
+    "XWM1kZKIJraGVqdKDJI2HUxsGhOThYiNSagY0RqaMJnpLKmJkQiC/Lwnub+" +
+    "kuSl53eXNOe9zv / fe5zw1 / r + 6sI6W9PsCH3GYy2tSI75tqE / 1Mj" +
+    "axl + p + DGE81fc4RaUK2MG7J27zVHsbgwFoxO0LN4e8glcBqMVKFC + " +
+    "EXBXPGKs + Ifa + R11JyAO2Qvsv4AytuMRJIejE36QJg4 + Km7ajGed4" +
+    "nQOO0YGf6UlrmEs3msQnjGIAf4opvckBv / EWu1hFAGYTYCoBPqdphbYvB" +
+    "0RwPpQEhHYkByzga0lAaL / lgOmi8b0kILQzOeALFksCQruUA4axgTAogh" +
+    "VGzicTJ4rRhoExhd7k1Y8c0F04u58ielOMsAl3CdCA65TWyE4PDnJARPkXA" +
+    "vTcikMiC3GIR2AJShmfkBrbAAAAAElFTkSuQmCC";
+
+  const img = document.createElement("img");
+  img.src = b64;
+  img.style.width = "16px";
+  img.style.height = "16px";
+
+  return img;
+}
+
+function createButton(resource: Resource, sfs: SimulatedFilesystem) {
+  const container = document.createElement("div");
+  container.classList.add("fl-ctr");
+
+  const goButton = document.createElement("button");
+  goButton.textContent = resource.name;
+
+  if (resource.type == "directory") {
+    goButton.classList.add("fl-btn-d");
+
+    goButton.addEventListener("click", () => {
+      simfs.cd([resource.name]);
+      paintDirListing();
+    });
+
+    document.getElementById("texteditor").hidden = true;
+  } else {
+    goButton.classList.add("fl-btn-f");
+    goButton.addEventListener("click", () => {
+      const texteditor = document.getElementById("texteditor");
+      texteditor.dataset.editing = simfs.cwd_path + "/" + resource.name;
+
+      texteditor.querySelector("header").innerText = resource.name;
+
+      texteditor.querySelector("textarea").value = (
+        resource as SFFile
+      ).read();
+
+      texteditor.hidden = false;
+    });
+  }
+
+  container.appendChild(goButton);
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.classList.add("fl-del");
+  deleteBtn.appendChild(createTrashImage());
+  deleteBtn.addEventListener("click", () => {
+    sfs.cwd().delete(resource.name);
+    paintDirListing();
+  });
+
+  container.appendChild(deleteBtn);
+
+  return container;
+}
 
 function createSampleSimfs() {
   const root = simfs.root;
@@ -42,50 +111,8 @@ function paintDirListing() {
   }
 
   listing.forEach(resource => {
-    const button = document.createElement("button");
-    button.classList.add("fl-btn");
+    const button = createButton(resource, simfs);
 
-    const textSpan = document.createElement("span");
-    textSpan.textContent = resource.name;
-
-    button.appendChild(textSpan);
-
-    if (resource.type == "directory") {
-      button.classList.add("fl-d");
-
-      button.addEventListener("click", () => {
-        simfs.cd([resource.name]);
-        paintDirListing();
-      });
-
-      document.getElementById("texteditor").hidden = true;
-    } else {
-      button.classList.add("fl-f");
-      button.addEventListener("click", () => {
-        const texteditor = document.getElementById("texteditor");
-        texteditor.dataset.editing = simfs.cwd_path + "/" + resource.name;
-
-        texteditor.querySelector("header").innerText = resource.name;
-
-        texteditor.querySelector("textarea").value = (
-          resource as SFFile
-        ).read();
-
-        texteditor.hidden = false;
-      });
-    }
-
-    const deleteBtn = document.createElement("button");
-    deleteBtn.innerHTML = "delete";
-
-    deleteBtn.addEventListener("click", () => {
-      simfs.cwd().delete(resource.name);
-      paintDirListing();
-      document.getElementById("texteditor").hidden = true;
-    });
-
-    button.innerHTML += "&emsp;";
-    button.appendChild(deleteBtn);
     listingEle.appendChild(button);
   });
 }

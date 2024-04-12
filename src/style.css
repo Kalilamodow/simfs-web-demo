@@ -1,5 +1,6 @@
 :root {
   font-family: sans-serif;
+  --df-width: 500px;
 }
 
 * {
@@ -8,7 +9,7 @@
 
 main {
   border: 1px solid black;
-  width: 50%;
+  width: var(--df-width);
   padding: 5px;
 }
 
@@ -20,34 +21,31 @@ main > section:not(:first-child) {
   border-top: 1px solid gray;
 }
 
-button.fl-btn {
+div.fl-ctr {
+  display: flex;
+  justify-content: space-between;
+}
+
+div.fl-ctr > button {
   display: block;
-  border: none;
   background-color: transparent;
-  margin: 0;
-  padding: 0;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-button.fl-btn > span {
-  text-decoration: underline;
-}
-
-button.fl-btn > button {
-  color: red;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  text-decoration: underline;
-  text-decoration-color: white; // hide default
-}
-
-button.fl-d > span {
+button.fl-btn-f {
   color: blue;
+  text-decoration: underline;
 }
 
-button.fl-f > span {
-  color: #08f;
+button.fl-btn-d {
+  color: green;
+  text-decoration: underline;
+}
+
+div.fl-ctr > button:hover {
+  background-color: #0001;
 }
 
 #texteditor {
@@ -55,7 +53,7 @@ button.fl-f > span {
 }
 
 #texteditor > textarea {
-  width: 50%;
+  width: var(--df-width);
   border: 1px solid black;
   padding: 5px;
   resize: none;
@@ -64,7 +62,7 @@ button.fl-f > span {
 
 #texteditor > button {
   display: block;
-  width: calc(50% + 10px);
+  width: calc(var(--df-width) + 10px);
 }
 
 section#tools {
