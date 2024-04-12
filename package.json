@@ -3,7 +3,7 @@
     "dependencies": {
         "lz-string": "^1.5.0",
         "path-browserify": "^1.0.1",
-        "simfs": "^0.2.2"
+        "simfs": "^0.2.3"
     },
     "devDependencies": {
         "postcss-nesting": "^12.1.1",

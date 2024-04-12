@@ -68,6 +68,17 @@ main {
       margin-right: 20px;
     }
 
+    div.fl-edit-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: right;
+
+      button, img {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
     &:hover {
       background-color: #ddd;
     }

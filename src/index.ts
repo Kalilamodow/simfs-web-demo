@@ -25,10 +25,34 @@ function createTrashImage() {
   return img;
 }
 
-function createButton(
+function createRenameButton(onclick: (evt: MouseEvent) => any) {
+  const base64 =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAA" + 
+    "Bzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAA7AAAAOwBeShxvQAAAB" + 
+    "l0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEISURBVFiF7d" + 
+    "bBKoRRGMbxn/kmxGIWCo2JJZfhMtyAW7A1WxYWlJUVytI1cCGszBRFFhgpY/" + 
+    "F+k6EhizlfqfOvs3k79Txv39d5HjKZdJzjFrvYRgcXVRo4wDP65XnFUZUGYA" + 
+    "k9vGO1avEBN2L7kUxgCm1soJHAQAM1PAzNHnGGdoEdbGEGbwkMTItFe0OzOa" + 
+    "yL5XXxhGYCcUZ/gmap2SH+0OtE4j8ZUGr2awmF/0Q2kA1kA9lATTzF8yI6q6" + 
+    "KFBXTrOBFhdCXe53EzSMP7odksJrFf4BIFVkRyjZtRaXiHQ1EDkvNrIUlNy2" + 
+    "clW6tafA8vvpbS0++X6gkNLIsadiza8SYWE+pl/ikf0sI3bxgBTbAAAAAASU" + 
+    "VORK5CYII=";
+
+  const image = document.createElement("img");
+  image.src = base64;
+
+  const button = document.createElement("button");
+  button.appendChild(image);
+
+  button.addEventListener("click", (evt) => onclick(evt));
+
+  return button;
+}
+
+function createDirListingButton(
   resource: Resource,
-  sfs: SimulatedFilesystem,
-  deletable = true,
+  filesystem: SimulatedFilesystem,
+  dirEditable = true
 ) {
   const container = document.createElement("div");
   container.classList.add("fl-ctr");
@@ -64,9 +88,7 @@ function createButton(
 
       texteditor.querySelector("header").innerText = resource.name;
 
-      texteditor.querySelector("textarea").value = (
-        resource as SFFile
-      ).read();
+      texteditor.querySelector("textarea").value = (resource as SFFile).read();
 
       texteditor.hidden = false;
 
@@ -80,16 +102,29 @@ function createButton(
 
   container.appendChild(goButton);
 
-  if (deletable) {
+  if (dirEditable) {
     const deleteBtn = document.createElement("button");
     deleteBtn.classList.add("fl-del");
     deleteBtn.appendChild(createTrashImage());
     deleteBtn.addEventListener("click", () => {
-      sfs.cwd().delete(resource.name);
+      filesystem.cwd().delete(resource.name);
       paintDirListing();
     });
 
-    container.appendChild(deleteBtn);
+    const renameBtn = createRenameButton(() => {
+      const newName = prompt("new resource name:", resource.name);
+      filesystem.cwd().rename(resource.name, newName);
+      paintDirListing();
+    });
+
+    renameBtn.classList.add("fl-rn");
+
+    const editButtons = document.createElement("div");
+    editButtons.appendChild(renameBtn);
+    editButtons.appendChild(deleteBtn);
+    editButtons.classList.add("fl-edit-buttons");
+
+    container.appendChild(editButtons);
   }
 
   return container;
@@ -126,14 +161,14 @@ function paintDirListing() {
       type: "directory",
     } as Resource;
 
-    const button = createButton(resource, simfs, false);
+    const button = createDirListingButton(resource, simfs, false);
     button.style.backgroundColor = "lightcyan";
 
     listingEle.appendChild(button);
   }
 
-  listing.forEach(resource => {
-    const button = createButton(resource, simfs);
+  listing.forEach((resource) => {
+    const button = createDirListingButton(resource, simfs);
 
     listingEle.appendChild(button);
   });
@@ -146,14 +181,14 @@ window.onload = () => {
   // text editor save button
   (() => {
     const teSaveButton = document.querySelector(
-      "#texteditor>button",
+      "#texteditor>button"
     ) as HTMLButtonElement;
 
     teSaveButton.addEventListener("click", () => {
       const path = document.getElementById("texteditor").dataset.editing;
 
       (simfs.get_by_path(path) as SFFile).write(
-        document.querySelector("textarea").value,
+        document.querySelector("textarea").value
       );
     });
   })();
@@ -161,11 +196,11 @@ window.onload = () => {
   // new file/dir buttons
   (() => {
     const newFileButton = document.querySelector(
-      "#new-file-btn",
+      "#new-file-btn"
     ) as HTMLButtonElement;
 
     const newDirButton = document.querySelector(
-      "#new-dir-btn",
+      "#new-dir-btn"
     ) as HTMLButtonElement;
 
     newFileButton.addEventListener("click", () => {
@@ -176,7 +211,7 @@ window.onload = () => {
         simfs
           .cwd()
           .get()
-          .some(resource => resource.name == fileName)
+          .some((resource) => resource.name == fileName)
       ) {
         alert("File already exists");
         return;
@@ -194,7 +229,7 @@ window.onload = () => {
         simfs
           .cwd()
           .get()
-          .some(resource => resource.name == dirName)
+          .some((resource) => resource.name == dirName)
       ) {
         alert("Directory already exists");
         return;
@@ -238,7 +273,7 @@ window.onload = () => {
         if (!file) return;
 
         const reader = new FileReader();
-        reader.onload = evt => {
+        reader.onload = (evt) => {
           simfs = new SimulatedFilesystem(evt.target.result as string);
           paintDirListing();
         };
@@ -258,7 +293,7 @@ window.onload = () => {
   // init code editor
   (() => {
     const editorContainer = document.querySelector(
-      "#texteditor>#editor",
+      "#texteditor>#editor"
     ) as HTMLDivElement;
     createCodeEditor(editorContainer);
   })();
