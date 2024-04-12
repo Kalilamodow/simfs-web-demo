@@ -2,7 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
     <title>simfs Web Demo</title>
 
     <link rel="stylesheet" href="src/style.css" />
@@ -16,8 +18,18 @@
       <section id="cwd-display">/</section>
 
       <section id="tools">
-        <button type="button" id="new-file-btn">new file</button>
-        <button type="button" id="new-dir-btn">new folder</button>
+        <button type="button" id="new-file-btn">
+          <img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAA3QAAAN0BcFOiBwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAI9SURBVFiF7Ze/a1RBEMc/c5riGkEDFgELEQJCCg2I8belaBOsIiLEcNELCFqksPGvELSI+CdYWVyh4BUmYMBgofgDMYitEgyiSUjGYudy6+adudt5YOPA8ngz+5333Xkzs7sATwDNHN+BcVUld4g5Wge+0JvsAnYbvqaqD3vEb4oCi70yB25FkdgAJnIiUMllHcljYBV4ICITvYLLIPAUGM0lUQYBVLWRS6IUAh4SpRHwkMitgpuGXQN+JWOddnWc+ZufnY4FPwM+EPpBkVTNdgxodnKSTUBVXwGDnewiUgfub+en1BzIkf8E/jkBTxVsERHpA04BF4CLpr4hIgOEPaOpqispLqsPFPSFg8Bb/jwvrCXvi8BwgvMTsNUum6/nwGVCiVaAA8AYYdNS4CdwpTQCtvIVG9NApcM8AaaAH4ROecRNwJw2zcd0l5iazV8AdngJjEZhryS2IfvI0QJcw3Dj3jI8ac97qrqR2E4Ah4CzBbi7LbyXwGF7zrcUIjIkIteB06YaEZG6iAxHuPkY7/kFnwmlVol0CxQf4T8l2K/AsrcRvQb2AfuBj6arE8I+QsiRBiFR56Io9QN7jKwrAncMP1Zgq5vtdoHtnNlmvDkwa89JEZHE9oLQ+ebYKteiOa4IVIE35mOqS8wlm//O8O5OOAgsETpcrYuPLxE64XF3J4wcn6d9EG0QdsO9Zusn/PNHtO+hm3nhuZymMgD0JbpvhGxvyXvgqqrOxpM81/PtxirwEpgBJoFqGr3fO2PoIDW1UHgAAAAASUVORK5CYII="
+            alt="New File"
+            height="24" />
+        </button>
+        <button type="button" id="new-dir-btn">
+          <img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAADsAAAA7AF5KHG9AAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAkVJREFUWIXt102IjWEUB/DfjGEaI7JQmhhhQhhWjBkmU6zGZyklhXw0hLKRBWWhlAU2ZKdsyILEWCgLH00ak4XFyNfIzsZozPhYGDMWz/PmznVnut373mzmX0/v+5zn9P7/nXOec+5lHP8ZZViOQ/E9F97jPIZKIWAC2rAXn1CVYx3AXLRjuBQiTuP5GOer0Y+rKE+bPJ8PdmAjtuO3EIVC19nsj1fkKfQJlqIuT/9cOIlZhQqAj3EVin25jLkE1I5iLxZTMIh5cf8FfdlE6/CwBOSZ2BqfXViZLWAturG5xCIuCzfrn1A34Sk+lFjAEqG5jbiG5ViBzhKT12B2wpMZgcWYimcpki0S0lkrhLxDaHpX8CJbQCN68TYF4ipcwh7h6r7GdBwXZstO/MoloFPx/b4Cd1CPVjzIOKuJwh5jDV7ydxa8wqkiyeEwBoTwJ7iAhfG9HPeEFJQnAt4J43Z9CgK6cS7L1ocdGfu6yNeUpGB+NIw1FfNBtVDMR1GJ/UIHrMQmoRjbo8geNCQCyoQU9BcpYHJ8fsMMHIy2SUKXbRDS0x19qjOLMI3r1yuEe5kQzfpo78Mx3Ij7KixAT2YjSkPAEG7jCCZm2AfiStCGH7hPKMJhI6u2GMwRJt01IfSEBpegFT+FOpEI6DX6j9JC0IzPeCM0nw3YjVtClM5kOp8QKjJtzMRFYbANClHuwqpsx5bo0FwCEQkaI0dL9kES9uvYhkf4mjL5tEh8E7tGE1CGLdGxKmUB34Xef1eJ/leMoyj8AZAMhDxyjG7yAAAAAElFTkSuQmCC"
+            alt="new folder"
+            height="28" />
+        </button>
 
         <button type="button" id="save-btn">save</button>
         <button type="button" id="load-btn">load</button>
@@ -34,10 +46,26 @@
       <div id="editor"></div>
       <section>
         <button type="button">save</button>
-        <button type="button" onclick="this.parentElement.parentElement.hidden = true">
+        <button
+          type="button"
+          onclick="this.parentElement.parentElement.hidden = true">
           close
         </button>
       </section>
     </section>
+
+    <footer>
+      <p>By <a href="https://github.com/Kalilamodow">kalilamodow</a></p>
+      <p>
+        <a href="https://github.com/Kalilamodow/simfs-demo">
+          GitHub repo
+        </a>
+      </p>
+      <p>
+        <a href="https://github.com/Kalilamodow/simfs">simfs</a>
+        (original project)
+      </p>
+      <p>Most icons from flaticon</p>
+    </footer>
   </body>
 </html>

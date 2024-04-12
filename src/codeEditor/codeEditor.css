@@ -1,6 +1,6 @@
 .code-editor {
   position: relative;
-  height: 85%;
+  height: 80%;
   margin-bottom: 10px;
 
   textarea,
@@ -40,7 +40,7 @@
 
       &.keyword,
       &.boolean {
-        color: purple;
+        color: blue;
       }
 
       &.string {
@@ -50,16 +50,17 @@
       &.number,
       &.constant,
       &.builtin {
-        color: orangered;
+        color: rgb(255, 50, 177);
       }
 
-      &.class-name, &.decorator {
-        color: #a0f;
+      &.class-name,
+      &.decorator {
+        color: #a0a;
         font-weight: bold;
       }
 
       &.function {
-        color: blue;
+        color: blueviolet;
         font-weight: bold;
       }
 

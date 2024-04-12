@@ -28,9 +28,10 @@ nav {
     justify-content: flex-end;
 
     button {
-      flex-grow: 1;
-      border: 1px solid gray;
+      background-color: transparent;
+      border: none;
       cursor: pointer;
+      padding: 0 15px;
 
       &:nth-child(2) {
         border-right: 2px solid #444;
@@ -132,5 +133,21 @@ section#texteditor {
 
   &[hidden] {
     display: none;
+  }
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2rem;
+  background-color: #aaa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    margin: 20px;
   }
 }

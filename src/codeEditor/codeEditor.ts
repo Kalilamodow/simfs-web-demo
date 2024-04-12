@@ -34,6 +34,8 @@ function initEditor(
     const html = prism.highlight(code, prism.languages[type], type);
 
     pre.innerHTML = html;
+
+    if (textarea.value.at(-1) == "\n") pre.innerHTML += "<br>";
   });
 
   textarea.addEventListener("scroll", () => {
@@ -92,7 +94,18 @@ function initEditor(
       return;
     }
 
-    if (["Ctrl", "Shift", "Alt"].includes(evt.key)) return;
+    if (
+      [
+        "Ctrl",
+        "Shift",
+        "Alt",
+        "ArrowLeft",
+        "ArrowRight",
+        "ArrowUp",
+        "ArrowDown",
+      ].includes(evt.key)
+    )
+      return;
     if (textarea.selectionStart != textarea.selectionEnd) return;
 
     tabSize = getTabSize();
