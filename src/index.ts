@@ -1,5 +1,6 @@
 import SimulatedFilesystem, { SFFile } from "simfs";
 import { Resource } from "simfs/dist/resources";
+import createCodeEditor from "./codeEditor/codeEditor";
 
 let simfs = new SimulatedFilesystem();
 
@@ -24,7 +25,11 @@ function createTrashImage() {
   return img;
 }
 
-function createButton(resource: Resource, sfs: SimulatedFilesystem) {
+function createButton(
+  resource: Resource,
+  sfs: SimulatedFilesystem,
+  deletable = true,
+) {
   const container = document.createElement("div");
   container.classList.add("fl-ctr");
 
@@ -45,6 +50,17 @@ function createButton(resource: Resource, sfs: SimulatedFilesystem) {
     goButton.addEventListener("click", () => {
       const texteditor = document.getElementById("texteditor");
       texteditor.dataset.editing = simfs.cwd_path + "/" + resource.name;
+      texteditor.dataset.filetype =
+        {
+          js: "javascript",
+          html: "html",
+          css: "css",
+          json: "json",
+          txt: "text",
+          md: "markdown",
+          py: "python",
+          ts: "typescript",
+        }[resource.name.split(".").pop()] || "text";
 
       texteditor.querySelector("header").innerText = resource.name;
 
@@ -53,20 +69,28 @@ function createButton(resource: Resource, sfs: SimulatedFilesystem) {
       ).read();
 
       texteditor.hidden = false;
+
+      if (document.querySelector("div#editor>textarea")) {
+        document
+          .querySelector("div#editor>textarea")
+          .dispatchEvent(new Event("input"));
+      }
     });
   }
 
   container.appendChild(goButton);
 
-  const deleteBtn = document.createElement("button");
-  deleteBtn.classList.add("fl-del");
-  deleteBtn.appendChild(createTrashImage());
-  deleteBtn.addEventListener("click", () => {
-    sfs.cwd().delete(resource.name);
-    paintDirListing();
-  });
+  if (deletable) {
+    const deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("fl-del");
+    deleteBtn.appendChild(createTrashImage());
+    deleteBtn.addEventListener("click", () => {
+      sfs.cwd().delete(resource.name);
+      paintDirListing();
+    });
 
-  container.appendChild(deleteBtn);
+    container.appendChild(deleteBtn);
+  }
 
   return container;
 }
@@ -97,15 +121,13 @@ function paintDirListing() {
   }
 
   if (simfs.cwd_path != "/") {
-    const button = document.createElement("button");
-    button.classList.add("fl-btn");
-    button.textContent = "up";
-    button.style.color = "purple";
+    const resource = {
+      name: "..",
+      type: "directory",
+    } as Resource;
 
-    button.addEventListener("click", () => {
-      simfs.cd([".."]);
-      paintDirListing();
-    });
+    const button = createButton(resource, simfs, false);
+    button.style.backgroundColor = "lightcyan";
 
     listingEle.appendChild(button);
   }
@@ -231,5 +253,13 @@ window.onload = () => {
         paintDirListing();
       }
     });
+  })();
+
+  // init code editor
+  (() => {
+    const editorContainer = document.querySelector(
+      "#texteditor>#editor",
+    ) as HTMLDivElement;
+    createCodeEditor(editorContainer);
   })();
 };

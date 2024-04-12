@@ -1,0 +1,73 @@
+.code-editor {
+  position: relative;
+  height: 85%;
+  margin-bottom: 10px;
+
+  textarea,
+  pre {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    border: none;
+    background-color: transparent;
+    outline: none;
+    padding: 5px;
+    margin: 0;
+
+    font-size: 0.9rem;
+    font-family: monospace;
+  }
+
+  textarea {
+    resize: none;
+    color: transparent;
+    caret-color: black;
+  }
+
+  pre {
+    background-color: #ddd;
+    color: blue;
+    border-radius: 5px;
+    overflow: hidden;
+
+    .token {
+      color: black;
+
+      &.keyword,
+      &.boolean {
+        color: purple;
+      }
+
+      &.string {
+        color: green;
+      }
+
+      &.number,
+      &.constant,
+      &.builtin {
+        color: orangered;
+      }
+
+      &.class-name {
+        color: darkcyan;
+        font-weight: bold;
+      }
+
+      &.function {
+        color: #80f;
+      }
+
+      &.comment {
+        color: brown;
+      }
+
+      &.property,
+      &.interpolation {
+        color: darkgoldenrod;
+      }
+    }
+  }
+}

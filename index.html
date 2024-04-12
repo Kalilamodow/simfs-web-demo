@@ -9,28 +9,36 @@
 
     <link rel="stylesheet" href="src/style.css" />
     <script src="src/index.ts" type="module" defer></script>
+
+    <link rel="stylesheet" href="src/codeEditor/codeEditor.css" />
+    <script src="./src/codeEditor/prism.js"></script>
   </head>
   <body>
-    <h1>simfs web demo</h1>
-    <main>
+    <nav>
       <section id="cwd-display">/</section>
-      <section id="dir-listing"></section>
-      <section id="create-buttons">
+
+      <section id="tools">
         <button type="button" id="new-file-btn">new file</button>
         <button type="button" id="new-dir-btn">new folder</button>
+
+        <button type="button" id="save-btn">save</button>
+        <button type="button" id="load-btn">load</button>
+        <button type="button" id="clear-btn">clear</button>
       </section>
+    </nav>
+
+    <main>
+      <section id="dir-listing"></section>
     </main>
 
-    <section id="texteditor" data-editing="" hidden>
+    <section id="texteditor" data-editing="" data-filetype="text" hidden>
       <header></header>
-      <textarea></textarea>
+      <div id="editor"></div>
       <button type="button">save</button>
-    </section>
-
-    <section id="tools">
-      <button type="button" id="save-btn">save</button>
-      <button type="button" id="load-btn">load</button>
-      <button type="button" id="clear-btn">clear</button>
+      <br /><br />
+      <button type="button" onclick="this.parentElement.hidden = true">
+        cancel
+      </button>
     </section>
   </body>
 </html>
