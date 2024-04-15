@@ -1,5 +1,4 @@
-import SimulatedFilesystem, { SFFile } from "simfs";
-import { Resource } from "simfs/dist/resources";
+import SimulatedFilesystem, { Resource, SFFile, verifyResourceName } from "simfs";
 import createCodeEditor from "./codeEditor/codeEditor";
 
 let simfs = new SimulatedFilesystem();
@@ -214,6 +213,11 @@ window.onload = () => {
       const fileName = prompt("Enter file name");
       if (!fileName) return;
 
+      if (!verifyResourceName(fileName)) {
+        alert("Invalid file name");
+        return;
+      }
+
       if (
         simfs
           .cwd()
@@ -231,6 +235,11 @@ window.onload = () => {
     newDirButton.addEventListener("click", () => {
       const dirName = prompt("Enter directory name");
       if (!dirName) return;
+
+      if (!verifyResourceName(dirName)) {
+        alert("Invalid folder name");
+        return;
+      }
 
       if (
         simfs
